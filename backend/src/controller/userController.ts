@@ -2,11 +2,14 @@ import type { Request, Response } from "express";
 import { userModel } from "../model/userModel.js";
 import bcrypt from "bcrypt"
 import { userSchema } from "../schema.js";
+import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../config.js";
+import { accountModel } from "../model/accountModel.js";
 
 export const signupUser = async(req: Request, res: Response) => {
 
     const { firstname, lastname, username, password } = req.body;
-    
+
     const {success} = userSchema.safeParse(req.body); // true/false
     if(!success) {
         res.status(400).json({
@@ -34,9 +37,23 @@ export const signupUser = async(req: Request, res: Response) => {
         })
         //console.log(user);
 
+        //---------------------CREATE NEW ACCOUNT-------------------//
+        const randomMoney = 1 + Math.floor(Math.random() * 1000);
+
+        await accountModel.create({
+            userId: user._id,
+            balance: randomMoney,
+        })
+
+
+        const token = await jwt.sign({
+            userId: user._id,
+        }, JWT_SECRET)
+
         res.status(201).json({
             message: "User created successfully",
-            user
+            user,
+            token: token,
         })
 
     } catch (err) {
@@ -64,8 +81,13 @@ export const signinUser = async(req: Request, res: Response) => {
         const isMatch = await bcrypt.compare(password, user.password);
 
         if(isMatch){
+            const token = await jwt.sign({ //genrate token
+                userId: user._id,
+            }, JWT_SECRET)
+
             return res.status(201).json({
                 message: "successfully signed in",
+                token: token,
             })
         }
 
@@ -125,5 +147,36 @@ export const updateUser = async(req: Request, res: Response) => {
         })
         console.log("Error in update endpoint")
     }
+
+}
+
+export const bulkFilter = async(req: Request, res: Response) => {
+
+    const filter = (req.query.filter as string) || "";
+
+    //find users in db matching firstname and lastnam
+    const users = await userModel.find({
+        $or: [
+            {
+                firstname: {
+                    "$regex": filter
+                }
+            },
+            {
+                lastname: {
+                    "$regex": filter
+                }
+            }
+        ]
+    })
+
+    res.status(200).json({
+        user: users.map((user) => ({
+            username: user.username,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            _id: user._id,
+        }))
+    })
 
 }

@@ -1,7 +1,7 @@
 import express from "express";
 const app = express();
 import "./config/dbConnection.js"; //db connection
-import userRouter from "./routes/userRouter.js"
+import indexRouter from "./routes/indexRouter.js";
 import cors from "cors";
 
 
@@ -12,7 +12,7 @@ app.get("/", (req, res) => {
     res.send("working");
 })
 
-app.use("/api/v1/user", userRouter);
+app.use("/api/v1", indexRouter);
 
 
 
