@@ -1,10 +1,18 @@
 import type { Request, Response } from "express";
 import { userModel } from "../model/userModel.js";
 import bcrypt from "bcrypt"
+import { userSchema } from "../schema.js";
 
-export async function signupUser(req: Request, res: Response) {
+export const signupUser = async(req: Request, res: Response) => {
 
     const { firstname, lastname, username, password } = req.body;
+    
+    const {success} = userSchema.safeParse(req.body); // true/false
+    if(!success) {
+        res.status(400).json({
+            message: "Incorrect inputs",
+        })
+    }
 
     try {
 
@@ -39,7 +47,8 @@ export async function signupUser(req: Request, res: Response) {
     }
 }
 
-export async function signinUser(req: Request, res: Response) {
+export const signinUser = async(req: Request, res: Response) => {
+
     const {username, password} = req.body;
 
     try{
@@ -73,7 +82,8 @@ export async function signinUser(req: Request, res: Response) {
     }
 }
 
-export async function updateUser(req: Request, res: Response) {
+export const updateUser = async(req: Request, res: Response) => {
+
     const { firstname, lastname, username, password } = req.body;
 
     try{
