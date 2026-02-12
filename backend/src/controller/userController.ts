@@ -104,6 +104,22 @@ export const signinUser = async(req: Request, res: Response) => {
     }
 }
 
+export const logoutUser = async(req: Request, res: Response) => {
+    try{
+        localStorage.setItem("token", "");
+        
+        res.status(200).json({
+            message: "Successfully logout",
+        })
+
+    } catch(err) {
+        console.log(err);
+        res.status(403).json({
+            message: "Can't logout",
+        })
+    }
+}
+
 export const updateUser = async(req: Request, res: Response) => {
 
     const { firstname, lastname, username, password } = req.body;

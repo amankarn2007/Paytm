@@ -4,6 +4,8 @@ import Signup from './pages/Signup'
 import Signin from './pages/Signin'
 import Dashboard from './pages/Dashboard'
 import Send from './pages/Send'
+import type React from 'react'
+import { Navigate } from 'react-router-dom'
 
 function App() {
 
@@ -13,7 +15,13 @@ function App() {
         <Routes>
           <Route path='/signup' element={<Signup />} />
           <Route path='/signin' element={<Signin />} />
-          <Route path='/dashboard' element={<Dashboard />} />
+
+          <Route path='/dashboard' element={
+              <SecureRoute>
+                <Dashboard />
+              </SecureRoute>
+          }>
+          </Route>
           <Route path='/send' element={<Send />} />
           <Route path='*' element={<Error />} />
         </Routes>
@@ -21,6 +29,18 @@ function App() {
     </div>
   )
 
+}
+
+function SecureRoute({children}: {children: React.ReactNode}) {
+
+  const token = localStorage.getItem("token");
+
+  if(!token){
+    alert("you have to login first");
+    return <Navigate to={"/signin"} />
+  }
+
+  return <>{children}</>
 }
 
 function Error() {
