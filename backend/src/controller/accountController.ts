@@ -20,6 +20,7 @@ export const checkBalance = async(req: Request, res: Response) => {
 
         res.status(200).json({
             message: "balanced checked successfully",
+            userID,
             balance: userAccount.balance
         })
 
@@ -34,47 +35,58 @@ export const checkBalance = async(req: Request, res: Response) => {
 export const transferMoney = async(req: Request, res: Response) => {
     const session = await mongoose.startSession();
 
-    session.startTransaction();
-    const { amount, to } = req.body;
+    try{
+        session.startTransaction();
+        const { amount, to } = req.body;
 
-    //@ts-ignore
-    const userId = req.userId; //sender's user id
+        //@ts-ignore
+        const userId = req.userId; //sender's user id by "isLoggedIn" midd
 
-    //sender's account
-    const account = await accountModel.findOne({userId: userId}).session(session); 
+        //sender's account
+        const account = await accountModel.findOne({userId: userId}).session(session); 
 
-    if(!account || account.balance < amount) {
+        if(!account || account.balance < amount) {
+            await session.abortTransaction();
+
+            return res.status(400).json({
+                message: "Insufficient Balance",
+            })
+        }
+
+        //receiver's account
+        const toAccount = await accountModel.findOne({userId: to}).session(session);
+
+        if(!toAccount) {
+            await session.abortTransaction();
+
+            return res.status(400).json({
+                message: "Invalid account",
+            })
+        }
+
+        await accountModel.findOneAndUpdate( //decrease amnt from sender's account
+            { userId: userId },
+            { $inc: {balance: -amount} }
+        ).session(session)
+
+        await accountModel.findOneAndUpdate( //increase amnt from receiver's account
+            { userId: to },
+            { $inc: { balance: amount } } 
+        ).session(session)
+
+
+        await session.commitTransaction();
+        res.json({
+            message: "transaction successfully",
+        })
+
+    } catch(err) {
         await session.abortTransaction();
 
-        return res.status(400).json({
-            message: "Insufficient Balance",
+        res.status(500).json({
+            message: "Transaction failed"
         })
+    } finally {
+        session.endSession();
     }
-
-    //receiver's account
-    const toAccount = await accountModel.findOne({userId: to}).session(session);
-
-    if(!toAccount) {
-        await session.abortTransaction();
-
-        return res.status(400).json({
-            message: "Invalid account",
-        })
-    }
-
-    await accountModel.findOneAndUpdate( //decrease amnt from sender's account
-        { userId: userId },
-        { $inc: {balance: -amount} }
-    ).session(session)
-
-    await accountModel.findOneAndUpdate( //increase amnt from receiver's account
-        { userId: to },
-        { $inc: { balance: amount } } 
-    ).session(session)
-
-    await session.commitTransaction();
-
-    res.json({
-        message: "transaction successfully",
-    })
 }

@@ -24,8 +24,14 @@ function App() {
           }>
           </Route>
 
+          <Route path='/send' element={
+              <SecureRoute>
+                <Send />
+              </SecureRoute>
+          }>
+          </Route>
+
           <Route path='/changePass' element={<UpdatePassword />} />
-          <Route path='/send' element={<Send />} />
           <Route path='*' element={<Error />} />
         </Routes>
       </BrowserRouter>

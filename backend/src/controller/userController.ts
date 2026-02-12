@@ -150,6 +150,7 @@ export const updateUser = async(req: Request, res: Response) => {
 
 }
 
+
 export const bulkFilter = async(req: Request, res: Response) => {
 
     const filter = (req.query.filter as string) || "";

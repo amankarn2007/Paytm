@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 //const URI = "mongodb://localhost:27017/paytm";
-const MONGO_ATLAS = "mongodb+srv://amankarn187_db_user:iPdgLZHEudAyQy8F@cluster0.dzuydvk.mongodb.net/?appName=Cluster0";;
+const MONGO_ATLAS = "mongodb+srv://amankarn187_db_user:vt8qZX5yf61GwZDt@cluster0.dzuydvk.mongodb.net/?appName=Cluster0";
 
 //async function connectDb() {
 //    try{
@@ -25,7 +25,7 @@ async function connectDb() {
         console.log("DB connected");
         
     } catch(err) {
-        console.log("Error in connection DB");
+        console.log("Error in connection DB", err);
     }
 }
 
