@@ -51,7 +51,7 @@ export default function Main({balance}: Mainprops) {
                     { responce?.map((user: any) => (
                         <div key={user._id} className="py-5 flex justify-between">
                             <div className="flex items-center">
-                                <div className="px-5.5 py-3 rounded-full bg-gray-400 text-2xl">{user.firstname[0]}</div>
+                                <div className="px-5.5 py-3 rounded-full bg-gray-400 text-2xl">{user.firstname[0].toUpperCase()}</div>
                                 <h2 className="text-lg pl-5">{user.firstname}</h2>
                             </div>
 

@@ -35,7 +35,7 @@ export default function Send() {
                 <h1 className="font-bold text-3xl pb-10">Send Money</h1>
 
                 <div className="flex items-center px-5">
-                    <div className="px-6 py-4 rounded-full text-white text-2xl bg-green-400">A</div>
+                    <div className="px-6 py-4 rounded-full text-white text-2xl bg-green-400">{toName[0].toUpperCase()}</div>
                     <h1 className="text-2xl font-medium mr-20 ml-5"> {toName} </h1>
                 </div>
 
