@@ -73,7 +73,7 @@ export const signinUser = async(req: Request, res: Response) => {
         //console.log(user);
 
         if(!user){
-            return res.status(401).json({
+            return res.status(200).json({
                 message: "can't find user",
             })
         }
@@ -101,22 +101,6 @@ export const signinUser = async(req: Request, res: Response) => {
             message: "Error in signin endpoint",
         })
         console.log("Error in signin endpoint", err);
-    }
-}
-
-export const logoutUser = async(req: Request, res: Response) => {
-    try{
-        localStorage.setItem("token", "");
-        
-        res.status(200).json({
-            message: "Successfully logout",
-        })
-
-    } catch(err) {
-        console.log(err);
-        res.status(403).json({
-            message: "Can't logout",
-        })
     }
 }
 
@@ -153,7 +137,7 @@ export const updateUser = async(req: Request, res: Response) => {
         //console.log(updateUser);
 
         res.status(200).json({
-            message: "successfully updates",
+            message: "successfully updated",
             updateUser,
         })
 

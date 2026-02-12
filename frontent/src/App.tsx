@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import Send from './pages/Send'
 import type React from 'react'
 import { Navigate } from 'react-router-dom'
+import UpdatePassword from './pages/UpdatePassword'
 
 function App() {
 
@@ -22,6 +23,8 @@ function App() {
               </SecureRoute>
           }>
           </Route>
+
+          <Route path='/changePass' element={<UpdatePassword />} />
           <Route path='/send' element={<Send />} />
           <Route path='*' element={<Error />} />
         </Routes>

@@ -1,16 +1,17 @@
-import axios from "axios"
-import { BACKEND_URL } from "../config"
+import { useNavigate } from "react-router-dom";
 
 interface props {
     username: string
 }
 
 export default function DashboardHeader({username}: props) {
+    const navigate = useNavigate();
 
     async function logout() {
         //console.log("working")
-        const res = await axios.post(`${BACKEND_URL}/api/v1/user/logout`);
-        console.log(res);
+        localStorage.removeItem("token")
+        alert("loged out");
+        navigate("/signin")
     }
 
     return(

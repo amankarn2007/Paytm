@@ -14,8 +14,8 @@ function FetchBalance() {
                     Authorization: token,
                 }
             });
-
-            console.log(response);
+            //console.log(response);
+            
             setBalance(response.data.balance)
 
         } catch(err){

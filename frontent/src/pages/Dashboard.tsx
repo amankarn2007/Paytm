@@ -4,20 +4,20 @@ import FetchBalance from "../hooks/fetchBalance";
 
 
 export default function Dashboard() {
-    FetchBalance();
+    const { balance } = FetchBalance();
 
 
     return(
         <div className="w-full h-screen bg-gray-200 flex flex-col">
             <DashboardHeader username="aman"/>
 
-            <Main balance={166} />
+            <Main balance={balance} />
         </div>
     )
 }
 
 interface Mainprops {
-    balance: number
+    balance?: number
 }
 
 function Main({balance}: Mainprops) {
@@ -25,7 +25,7 @@ function Main({balance}: Mainprops) {
         <div className="w-full flex flex-col grow px-10">
 
             <div className="pt-10 font-medium text-xl">
-                Your balace <span className="pl-5">RS {balance}</span>
+                Your balace <span className="pl-5">RS {balance || 1}</span>
             </div>
 
 

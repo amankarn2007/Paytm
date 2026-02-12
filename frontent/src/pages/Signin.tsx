@@ -19,13 +19,16 @@ export default function Signin() {
         //console.log(data);
 
         const response = await axios.post(`${BACKEND_URL}/api/v1/user/signin`, data);
-        console.log(response);
+        //console.log(response);
 
         alert(response.data.message);
+        
 
-        const token = response.data.token;
-        localStorage.setItem("token", token);
-        navigate("/dashboard")
+        if(response.data.token){
+            const token = response.data.token;
+            localStorage.setItem("token", token);
+            navigate("/dashboard")
+        }
     }
 
     return(
@@ -33,13 +36,14 @@ export default function Signin() {
             <div className="h-150 w-110 bg-white rounded-xl flex flex-col items-center">
 
                 <div className="flex flex-col items-center gap-2 mt-15">
-                    <h1 className="text-4xl font-semibold">Sign up</h1>
+                    <h1 className="text-4xl font-semibold">Sign in</h1>
                     <p className="text-lg">Enter your information to login your account</p>
                 </div>
 
-                <div className="pt-10">
+                <div className="pt-5">
                     <LabeldInput label="Username" placeholder="amankarn@gmail.com" ref={usernameRef}/>
                     <LabeldInput label="Password" type="password" ref={passwordRef}/>
+                    <a href="/changePass" className="hover:underline">forget password ?</a>
                 </div>
 
                 <button className="px-39 py-2 rounded-lg mt-8 bg-black text-white cursor-pointer hover:bg-gray-800" onClick={sendReq}>Signin</button>
@@ -60,7 +64,7 @@ interface props {
 
 function LabeldInput({label, placeholder, type, ref}: props) {
     return(
-        <div className="flex flex-col pb-5">
+        <div className="flex flex-col pt-5">
             <label className=""> {label} </label>
 
             <input type={type || "text"} placeholder={placeholder} ref={ref} className="pr-38 pl-2 py-2 border border-gray-400 rounded-lg"/>
